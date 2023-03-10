@@ -1,0 +1,28 @@
+<?php
+
+namespace App\DataFixtures;
+
+use App\Entity\Reminders;
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Persistence\ObjectManager;
+use Faker;
+
+class RemindersFixtures extends Fixture
+{
+    public function load(ObjectManager $manager)
+    {
+        $faker = Faker\Factory::create('fr_FR');
+
+        for ($remind=1; $remind <= 5 ; $remind++) { 
+            $application = $this->getReference('application_'. $faker->numberBetween(1,5));
+            $reminder = new Reminders();
+            $reminder->setReminderDate($faker->dateTimeBetween('-1 week', '+1 week'))
+            ->setRelaunchMode($faker->text(10))
+            ->setJobInterwiewDate($faker->dateTimeBetween('-1 week', '+1 week'))
+            ->setApplications($application);
+            $manager->persist($reminder);
+        }
+
+        $manager->flush();
+    }
+}
